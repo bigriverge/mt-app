@@ -105,7 +105,109 @@ router.post('/signup', async (ctx) => {
 
 //登录
 router.post('/signin', async (ctx, next) => {
-  return Passport.authenticate('local', function() {
-    
-  })
+  return Passport.authenticate('local', function(err, user, info, status) {
+    if(err) {
+      ctx.body = {
+        code: -1,
+        msg: err
+      }
+    }else{
+      if(user) {
+        ctx.body = {
+          code: 0,
+          msg: '登录成功',
+          user
+        }
+
+        return ctx.login(user)
+      }else{
+        ctx.body = {
+          code: 1,
+          msg: info
+        }
+      }
+    }
+  })(ctx, next)
 })
+
+router.post('/verify', async (ctx, next) => {
+  let username = ctx.request.bodyname.username
+  const saveExpire = await Store.hget(`nodemail:${username}`, 'expire')
+  if(saveExpire && new Date().getTime() - saveExpire < 0) {
+    ctx.body = {
+      code: -7,
+      msg: '验证码请求过于频繁,1分钟1次'
+    }
+    return false
+  }
+
+  // email 发送信息
+  let transport = nodeMailer.createTransport({
+    host: Config.smtp.host,
+    port: 587,
+    secure: false,
+    auth: {
+      user: Config.smtp.user,
+      pass: Config.smtp.pass
+    }
+  })
+
+  // email 接收信息  (用户)
+  let ko = {
+    code: Config.smtp.code()
+    expire: Config.smtp.expire()
+    email: ctx.request.body.email,
+    user: ctx.request.body.request
+  }
+
+  // email 内容
+  let mailOptions = {
+    from: `"认证邮件"<${Config.smtp.user}>`,
+    to: ko.email,
+    subject: '<慕课网高仿美团>注册码',
+    html: `您在<慕课网高仿美团>课程中注册, 您的邀请码是${ko.code}`
+  }
+
+  await transport.sendMail(mailOptions, (error, info) => {
+    if(error) {
+      return console.log('error')
+    }else{
+      Store.hmset(`nodemail:${ko.user}`, 'code', ko.code, 'expire', ko.expire, 'email', 'ko.email')
+    }
+  })
+
+  ctx.body = {
+    code: 0,
+    msg: '验证码已发送,可能会有延时,有效期1分钟'
+  }
+
+})
+
+router.get('/exit', async (ctx, next) => {
+  await ctx.logout()
+  if(!ctx.isAuthenticated()) {
+    ctx.body = {
+      code: 0
+    }
+  }else{
+    code: -8
+  }
+})
+
+router.get('/getUser', async (ctx) => {
+  //检查是不是登录状态
+  if(ctx.isAuthenticated()) {
+    const {username, email} = ctx.session.passport.user
+    ctx.body = {
+      user: username,
+      email
+    }
+  }else{
+    ctx.body = {
+      user: '',
+      email: ''
+    }
+  }
+})
+
+export default router

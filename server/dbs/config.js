@@ -8,7 +8,7 @@ export default {
       return 6379
     }
   },
-  stmp: {
+  smtp: {
     get host() {
       return 'stmp.qq.com'
     },
@@ -29,7 +29,7 @@ export default {
       return new Date().getTime() + 60 * 60 * 1000
     }
   }
-  
+
 }
 
 // dbs student是数据库名称
