@@ -3,7 +3,7 @@ import Koa from 'koa'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
-import monggose from 'mongoose'
+import mongoose from 'mongoose'
 import bodyParser from 'koa-bodyparser'
 import session from 'koa-generic-session'
 import Redis from 'koa-redis'
@@ -73,3 +73,15 @@ async function start () {
 }
 
 start()
+
+
+// 启动redis服务
+// redis-server
+// 遇到问题:
+// Creating Server TCP listening socket *:6379: bind: Address already in use
+// 解决方法:
+// 1. ps -ef | grep -i redis 查找redis-server进程
+// 2. kill -9 进程ID
+
+// 启动mongodb
+// mongod

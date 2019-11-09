@@ -154,8 +154,8 @@ router.post('/verify', async (ctx, next) => {
 
   // email 接收信息  (用户)
   let ko = {
-    code: Config.smtp.code()
-    expire: Config.smtp.expire()
+    code: Config.smtp.code(),
+    expire: Config.smtp.expire(),
     email: ctx.request.body.email,
     user: ctx.request.body.request
   }

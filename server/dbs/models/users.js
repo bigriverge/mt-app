@@ -1,6 +1,6 @@
-import monggose from 'mongoose'
+import mongoose from 'mongoose'
 
-const Schema = monggose.Schema
+const Schema = mongoose.Schema
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -17,6 +17,6 @@ const UserSchema = new Schema({
   }
 })
 
-export default monggose.model('User', UserSchema)
+export default mongoose.model('User', UserSchema)
 
 // 模型

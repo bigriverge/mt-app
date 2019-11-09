@@ -1,7 +1,7 @@
 import passport from 'koa-passport'
 import LocalStrategy from 'passport-local'
 
-import UserModel from '../dbs/models/users'
+import UserModel from '../../dbs/models/users'
 
 passport.use(new LocalStrategy(async function(username, password, done){
   let where = {
@@ -21,9 +21,9 @@ passport.use(new LocalStrategy(async function(username, password, done){
 }))
 
 // session
-passport.serializeUser(function(user, done)) {
+passport.serializeUser(function(user, done){
   done(null, user)
-}
+})
 
 passport.deserializeUser(function(user, done){
   return done(null, user)
