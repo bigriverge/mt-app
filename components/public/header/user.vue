@@ -17,6 +17,13 @@ export default {
     return {
       user: ''
     }
+  },
+  // vue声明周期钩子函数 组件 挂载到页面上 渲染完毕 再去请求 达到异步的效果
+  async mounted() {
+    const {status, data: {user}} = await this.$axios.get('/users/getUser')
+    if(status === 200) {
+      this.user = user
+    }
   }
 }
 </script>
