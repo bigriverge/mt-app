@@ -35,8 +35,7 @@
           class="btn-login"
           type="success"
           size="mini"
-          @click="login"
-          >登录</el-button>
+          @click="login">登录</el-button>
       </div>
     </div>
   </div>
@@ -52,7 +51,12 @@ export default {
       error: ''
     }
   },
-  layout: 'blank'
+  layout: 'blank',
+  methods: {
+    login: {
+      
+    }
+  }
 }
 </script>
 

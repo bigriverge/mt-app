@@ -76,12 +76,13 @@ router.post('/signup', async (ctx) => {
   })
 
   if(nuser) {
+    console.log('create user success')
     //注册成功 自动登录
     let res = await axios.post('/users/signin', {
       username,
       password
     })
-
+    console.log('sign in')
     if(res.data && res.data.code === 0) {
       ctx.body = {
         code: 0,
@@ -105,8 +106,10 @@ router.post('/signup', async (ctx) => {
 
 //登录
 router.post('/signin', async (ctx, next) => {
+  console.log('ready to login')
   return Passport.authenticate('local', function(err, user, info, status) {
     if(err) {
+      console.log('err')
       ctx.body = {
         code: -1,
         msg: err
@@ -118,9 +121,10 @@ router.post('/signin', async (ctx, next) => {
           msg: '登录成功',
           user
         }
-
+        console.log('已登录')
         return ctx.login(user)
       }else{
+        console.log('haha')
         ctx.body = {
           code: 1,
           msg: info
@@ -131,7 +135,7 @@ router.post('/signin', async (ctx, next) => {
 })
 
 router.post('/verify', async (ctx, next) => {
-  let username = ctx.request.bodyname.username
+  let username = ctx.request.body.username
   const saveExpire = await Store.hget(`nodemail:${username}`, 'expire')
   if(saveExpire && new Date().getTime() - saveExpire < 0) {
     ctx.body = {
@@ -143,9 +147,10 @@ router.post('/verify', async (ctx, next) => {
 
   // email 发送信息
   let transport = nodeMailer.createTransport({
-    host: Config.smtp.host,
-    port: 587,
-    secure: false,
+    // host: Config.smtp.host,
+    // port: 587,
+    // secure: false,
+    service: 'qq',
     auth: {
       user: Config.smtp.user,
       pass: Config.smtp.pass
@@ -157,8 +162,10 @@ router.post('/verify', async (ctx, next) => {
     code: Config.smtp.code(),
     expire: Config.smtp.expire(),
     email: ctx.request.body.email,
-    user: ctx.request.body.request
+    user: ctx.request.body.username
   }
+
+  console.log(ko.email)
 
   // email 内容
   let mailOptions = {

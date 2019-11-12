@@ -17,19 +17,18 @@ export default {
     },
     get pass() {
       return 'exabxiqabvudbejb'
-    }
-  },
-  get code() {
-    return () => {
-      return Math.random().toString().slice(2, 6).toUpperCase()
-    }
-  },
-  get expire() {
-    return () => {
-      return new Date().getTime() + 60 * 60 * 1000
+    },
+    get code() {
+      return () => {
+        return Math.random().toString().slice(2, 6).toUpperCase()
+      }
+    },
+    get expire() {
+      return () => {
+        return new Date().getTime() + 60 * 60 * 1000
+      }
     }
   }
-
 }
 
 // dbs student是数据库名称

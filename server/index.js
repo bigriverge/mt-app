@@ -1,4 +1,3 @@
-//const Koa = require('koa')
 import Koa from 'koa'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
@@ -12,7 +11,38 @@ import Config from './dbs/config'
 import passport from './interface/utils/passport'
 import users from './interface/users'
 
+//import proxy from 'koa-better-http-proxy'
+
 const app = new Koa()
+
+const host = process.env.HOST || '127.0.0.1'
+const port = process.env.PORT || 3000
+
+app.keys = ['mt', 'keyskeys']
+app.proxy = true
+app.use(session({
+  key: 'mt',
+  prefix: 'mt:uid',
+  store: new Redis()   //session 借助redis存储
+}))
+app.use(bodyParser({
+  extendTypes: ['json', 'form', 'text']
+}))
+
+app.use(json())
+
+// 连接数据库
+mongoose.connect(Config.dbs, {
+  useNewUrlParser: true
+})
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+// app.use(proxy('/register', {
+//   target: 'http://127.0.0.1:3000',
+//   changeOrigin: true
+// }))
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -22,31 +52,10 @@ async function start () {
   // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
 
-  const {
-    host = process.env.HOST || '127.0.0.1',
-    port = process.env.PORT || 3000
-  } = nuxt.options.server
-
-  app.keys = ['mt', 'keyskeys']
-  app.proxy = true
-  app.use(session({
-    key: 'mt',
-    prefix: 'mt:uid',
-    store: new Redis()   //session 借助redis存储
-  }))
-  app.use(bodyParser({
-    extendTypes: ['json', 'form', 'text']
-  }))
-
-  app.use(json())
-
-  // 连接数据库
-  mongoose.connect(Config.dbs, {
-    useNewUrlParser: true
-  })
-
-  app.use(passport.initialize())
-  app.use(passport.session())
+  // const {
+  //   host = process.env.HOST || '127.0.0.1',
+  //   port = process.env.PORT || 3000
+  // } = nuxt.options.server
 
   // Build in development
   if (config.dev) {
