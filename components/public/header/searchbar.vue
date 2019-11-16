@@ -12,16 +12,17 @@
           </button>
           <dl class="hotPlace" v-if="isHotPlace">
             <dt>热门搜索</dt>
-            <dd v-for="(item,index) in hotPlace" :key="index">{{ item }}</dd>
+            <dd v-for="(item, index) in $store.state.home.hotPlace.slice(0, 5)" :key="index">{{ item.name }}</dd>
           </dl>
           <dl class="searchList" v-if="isSearchList">
             <dd v-for="(item, index) in searchList" :key="index">{{ item.name }}</dd>
           </dl>
         </div>
         <p class="suggset">
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
+          <a
+            href="#"
+            v-for="(item, index) in $store.state.home.hotPlace.slice(0, 5)"
+            :key="index">{{ item.name }} </a>
         </p>
         <ul class="nav">
         	<li>

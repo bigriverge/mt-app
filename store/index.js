@@ -28,6 +28,19 @@ const store = () => new Vuex.Store({
         }
       } = await app.$axios.get('/geo/menu')
       commit('home/setMenu', statusMenu === 200 ? menu: [])
+
+      const {
+        status: statusHotPlace,
+        data: {
+          result
+        }
+      } = await app.$axios.get('/search/hotPlace', {
+        params: {
+          city: app.store.state.geo.position.city.replace('市', '')
+        }
+      })
+      console.log(result)
+      commit('home/setHotPlace', statusHotPlace === 200 ? result : [])
     }
   }
 })
