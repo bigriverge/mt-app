@@ -1,9 +1,8 @@
 import Router from 'koa-router'
 import axios from './utils/axios'
-
 import Poi from '../dbs/models/pois'
 
-let router = new Router({prefix: 'search'})
+let router = new Router({prefix: '/search'})
 
 router.get('/top', async (ctx) => {
 
