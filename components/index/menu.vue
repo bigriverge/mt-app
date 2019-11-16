@@ -3,10 +3,10 @@
      <dl class="nav" @mouseleave="mouseleave">
         <dt>全部分类</dt>
       <dd
-        v-for="(item, index) in menu"
+        v-for="(item, index) in $store.state.home.menu"
         @mouseenter="enter"
         :key="index">
-        <i :class="item.type"/>{{ item.title }}
+        <i :class="item.type"/>{{ item.name }}
         <span class="arrow"/>
       </dd>
     </dl>
@@ -30,7 +30,7 @@ export default {
       kind: '',
       menu: [{
        type: 'food',
-       title: '美食',
+       name: '美食',
        child: [{
          title: '美食',
          child: ['代金券', '甜品', '火锅', '自助餐']
@@ -38,7 +38,7 @@ export default {
       },
       {
         type: 'takeout',
-        title: '外卖',
+        name: '外卖',
         child: [{
           title: '外卖',
           child: ['美团外卖', '百度外卖']
@@ -49,7 +49,7 @@ export default {
   computed: {
     curdetail: function() {
       //console.log(this.menu.filter((item) => item.type === this.kind)[0])
-      return this.menu.filter((item) => item.type === this.kind)[0]
+      return this.$store.state.home.menu.filter((item) => item.type === this.kind)[0]
     }
   },
   methods: {
