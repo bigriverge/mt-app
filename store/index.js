@@ -39,7 +39,7 @@ const store = () => new Vuex.Store({
           city: app.store.state.geo.position.city.replace('市', '')
         }
       })
-      console.log(result)
+      //console.log(result)
       commit('home/setHotPlace', statusHotPlace === 200 ? result : [])
     }
   }

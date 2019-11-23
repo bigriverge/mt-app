@@ -126,4 +126,24 @@ router.get('/province/:id', async (ctx) => {
 
 })
 
+router.get('/hotCity', async (ctx) => {
+  let {
+    status,
+    data: {
+      hots
+    }
+  } = await axios.get('http://cp-tools.cn/geo/hotCity')
+  
+  if(status === 200) {
+    ctx.body = {
+      hots
+    }
+  }else {
+    ctx.body = {
+      hots: []
+    }
+  }
+  
+})
+
 export default router
